@@ -28,6 +28,12 @@ function notifyAllTabs() {
         }).forEach(notifyTab);
     });
 }
+function urlImageComper(url1, url2){
+    if(url1.length == 0 || url2.length == 0) return false;
+    var arr_url1 = url1.split('/');
+    var arr_url2 = url2.split('/');
+    return (arr_url1[arr_url1.length - 1] == arr_url2[arr_url2.length - 1]);
+}
 chrome.bookmarks.getFirstChildByTitle = function (id, title, callback) {
 
     chrome.bookmarks.getChildren(id, function (children) {
@@ -48,30 +54,33 @@ chrome.bookmarks.getFirstChildByUrl = function (id, url, callback) {
         var iLength = children.length;
         while (iLength > 0 && iLength--) {
             var item = children[iLength];
-            if (item.hasOwnProperty('url') && item.url == url) {
+            alert("in getFirstChildByUrl item.url = url " + urlImageComper(item.url, url));
+            if (item.hasOwnProperty('url') && urlImageComper(item.url, url)) {
                 return callback(item);
             }
         }
+        alert("in getFirstChildByUrl item[0] = " + children[0].url )
         return callback(false);
     });
 };
 function createTreeStep3(parentId, imageList){
     if(imageList && imageList.length != 0){
         for(var i = 0 ; i < imageList.length ; i++ ){
-            alert("image url :::: " + imageList[i]);
-            chrome.bookmarks.getFirstChildByUrl(parentId, imageList[i], function(value) {
+            var imageUrl = imageList[i];
+            // alert("image url :::: " + imageList[i] + " :::: " + imageUrl );
+            chrome.bookmarks.getFirstChildByUrl(parentId, imageUrl, function(value) {
             // alert("the germans got there - -- - ");
                 if (value === false) {
                     chrome.bookmarks.create({
                         parentId: parentId,
                         // title: ("marina" + parentId + i),
-                        url: imageList[i]
+                        url: imageUrl
                     }, function (folder) {
                         // console.log(folderName + " not found and has been created at ID " + folder.id);
-                        // alert(("marina" + parentId + i) + " not found and has been created at ID " + folder.id);
+                        alert(("marina" + parentId + i) + " not found and has been created at ID " + folder.id);
                     });
                 }else{
-                    // alert(("marina" + parentId + i) + " found value === " + value.title);
+                    alert(("marina" + parentId + i) + " found value === " + value.title);
                 }
             });
         }
@@ -115,63 +124,6 @@ function createTreeStep1(parentId, imageList){
 }
 function readBookmarks(imageList){
     createTreeStep1("2", imageList);
-    // var baseFolderId = "-1";
-    // var ynetFolderId = "-1";
-    // chrome.bookmarks.getFirstChildByTitle("2", baseFolderName, function(value) {
-    //     // alert("the germans got there - -- - ");
-    //     if (value === false) {
-    //         chrome.bookmarks.create({
-    //             parentId: "2",
-    //             title: baseFolderName
-    //         }, function (folder) {
-    //             // console.log(folderName + " not found and has been created at ID " + folder.id);
-    //             // alert(baseFolderName + " not found and has been created at ID " + folder.id);
-    //             baseFolderId = folder.id;
-    //         });
-    //     }else{
-    //         // alert(baseFolderName + " found value === " + value.title);
-    //         baseFolderId = value.id;
-    //     }
-    // });
-    // alert("base folder id = " + baseFolderId);
-    // if(baseFolderId != "-1"){
-    //     chrome.bookmarks.getFirstChildByTitle(baseFolderId, ynetFolderName, function(value) {
-    //         // alert("the germans got there - -- - ");
-    //         if (value === false) {
-    //             chrome.bookmarks.create({
-    //                 parentId: baseFolderId,
-    //                 title: ynetFolderName
-    //             }, function (folder) {
-    //                 // console.log(folderName + " not found and has been created at ID " + folder.id);
-    //                 // alert(ynetFolderName + " not found and has been created at ID " + folder.id);
-    //                 ynetFolderName = folder.id;
-    //             });
-    //         }else{
-    //             // alert(ynetFolderName + " found value === " + value.title);
-    //             ynetFolderName = value.id;
-    //         }
-    //     });
-    // }
-    // alert("ynet folder id = " + ynetFolderId);
-    // if(ynetFolderId != "-1" && imageList && imageList.length != 0){
-    //     for(var i = 0 ; i < imageList.length ; i++ ){
-    //         chrome.bookmarks.getFirstChildByUrl(ynetFolderId, imageList[i], function(value) {
-    //         // alert("the germans got there - -- - ");
-    //             if (value === false) {
-    //                 chrome.bookmarks.create({
-    //                     parentId: ynetFolderId,
-    //                     title: imageList[i],
-    //                     url: imageList[i]
-    //                 }, function (folder) {
-    //                     // console.log(folderName + " not found and has been created at ID " + folder.id);
-    //                     // alert(ynetFolderName + " not found and has been created at ID " + folder.id);
-    //                 });
-    //             }else{
-    //                 // alert(ynetFolderName + " found value === " + value.title);
-    //             }
-    //         });
-    //     }
-    // }
 }
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {

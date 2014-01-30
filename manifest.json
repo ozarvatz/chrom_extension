@@ -13,7 +13,7 @@
     },
     "content_scripts": [
         {
-            "matches": [ "http://*/*", "https://*/*" ],
+            "matches": [ "http://images1.ynet.co.il/PicServer3/2013/07/13/4733181/47330573074894408529no.jpg" ],
             "js": [ "content.js" ],
             "run_at": "document_end"
         }
