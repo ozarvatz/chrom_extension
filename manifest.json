@@ -13,12 +13,13 @@
     },
     "content_scripts": [
         {
-            "matches": [ "http://images1.ynet.co.il/PicServer3/2013/07/13/4733181/47330573074894408529no.jpg" ],
+            "matches": [  "http://*/*", "https://*/*" ],
             "js": [ "content.js" ],
             "run_at": "document_end"
         }
     ],
     "browser_action": {
-        "default_title": "OFF"
+        "default_title": "Big pictures",
+        "default_icon": "icon.png"
     }
 }

@@ -1,4 +1,4 @@
-var elementId = 'hello-world';
+var elementId = 'Saving-big-pictures';
 var injected = false;
 var shown = false;
 
@@ -17,7 +17,7 @@ function show() {
 function inject(url) {
     // alert("DEBUG : content::inject " + url);
     var p = document.createElement('p');
-    p.innerHTML = 'Hello world';
+    p.innerHTML = 'Saving big pictures';
     p.id = elementId;
     var styles = { position: 'fixed', background: 'black', color: 'white', left: 0, top: 0 };
     for (var s in styles) {
@@ -41,18 +41,26 @@ function createBigImageList(){
     }
     return bigImages;
 }
+function sendImageListRunTimeMessage(){
+    chrome.runtime.sendMessage({ imgList: createBigImageList() , url: document.URL });
+}
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     // alert("DEBUG : content::onMessage.addListener  " + request.event);
     if (request.event !== 'stateChange') {
         return;
     }
-    if (request.state && !injected) {
-        inject();
-    } else if (request.state && !shown) {
-        show();
+    if (request.state) {
+        if(!injected){
+            inject();
+        }
+        if(!show){
+            show();
+            
+        }
+        sendImageListRunTimeMessage()
     } else {
         hide();
     }
 });
-chrome.runtime.sendMessage({ csReady: true , imgList: createBigImageList()});
+chrome.runtime.sendMessage({ csReady: false });
