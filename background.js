@@ -1,6 +1,6 @@
 var isEnabled = false;
 var baseFolderName = "Great Pics";
-
+var hashTabsImageList = [];
 function refreshIcon() {
     var badge = "";
     if (isEnabled) {
@@ -50,9 +50,10 @@ chrome.bookmarks.getFirstChildByUrl = function (id, url, callback) {
                 if (item && item.hasOwnProperty('url') && (item.url == url)) {
                     return callback(item);
                 }
+                return callback(false);
             }
         }
-        return callback(false);
+        // return callback(false);
     });
 };
 
