@@ -1,3 +1,4 @@
+// this is test 1
 var isEnabled = false;
 var baseFolderName = "Great Pics";
 var hashTabsImageList = [];
